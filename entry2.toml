@@ -2,24 +2,11 @@
   function = "for_each"
   loop = "$$_order_items as oi"
   [on_place_order.for_each]
-    before_iteration = "%%_set(all_success,true)"
+    before_iteration = [
+      "%%_set(all_success,true)"
+    ]
     each_iteration = [
-      "%%_set(result,%%_make_external_request(oi))"
-      "%%_if(result&success,%%_custom_function(handle_success),%%_set(all_success,false))"
-    ],
-    break_iteration_if = "$$_all_success is not true"
-
-[[on_place_order]]
-  if = "##order&fulfillment_status is PENDING"
-  function = "for_each"
-  [on_place_order.for_each]
-    loop = "##order_items as oi"
-    before_iteration = "%%_set(all_success,true)"
-    each_iteration = [
-      "%%_set(result,%%_make_external_request(oi))"
-      "%%_if(result&success,%%_custom_function(handle_success),%%_set(all_success,false))"
-    ],
-    break_iteration_if = "$$_all_success is not true"
-
-[custom_functions]
-
+      "%%_set(result,%%_make_external_request($$_oi))",
+      "%%_if($$_result,%%_custom_function(handle_success,$$_result),%%_set(all_success,false))"
+    ]
+    break_iteration_if = "%%_negate(%%_if($$_all_success))"
