@@ -1,3 +1,5 @@
+require "hollerith/function_runner"
+
 class Hollerith::ValueGetter
 
   attr_reader :user_context_change
@@ -25,7 +27,7 @@ class Hollerith::ValueGetter
       hash_key = value_to_get[3..-1].strip
       read_hash_value(hash_key)
     elsif value_to_get.start_with?('%%_')
-      runner = FunctionRunner.new(
+      runner = Hollerith::FunctionRunner.new(
         value_to_get,
         @main_context,
         @user_context.merge(@user_context_change || {}),

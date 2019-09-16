@@ -1,7 +1,8 @@
 require 'toml'
 require 'pry'
 require 'deep_merge'
-load '/Users/noahkochanowicz/Stage/codeless_integrations/lib/hollerith.rb'
+#load '/Users/noahkochanowicz/Stage/codeless_integrations/lib/hollerith.rb'
+require 'hollerith'
 
 config = TOML::Parser.new(File.read('/Users/noahkochanowicz/Stage/codeless_integrations/test_files/entry.toml')).parsed
 

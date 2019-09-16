@@ -1,4 +1,4 @@
-module Hollerith 
+class Hollerith 
 
   HOOKS = %w(
     on_place_order

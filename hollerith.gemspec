@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'hollerith'
-  s.version     = '0.0.1'
+  s.version     = '0.0.6'
   s.date        = '2019-09-16'
   s.summary     = "Create and run functions in JSON."
   s.description = "Trigger code through a series of hooks and run code in loops and through conditions."
