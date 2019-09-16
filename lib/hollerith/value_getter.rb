@@ -1,4 +1,4 @@
-class ValueGetter
+class Hollerith::ValueGetter
 
   attr_reader :user_context_change
 

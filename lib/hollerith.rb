@@ -1,15 +1,9 @@
-load 'function_runner.rb'
-
-class Hollerith 
+module Hollerith 
 
   HOOKS = %w(
     on_place_order
     on_update_order
   )
-
-  def self.function_runner
-    FunctionRunner
-  end
 
   def initialize configuration, main_context = {}
     @configuration = configuration 
@@ -109,7 +103,7 @@ class Hollerith
   def evaluate_function function_definition
     return unless function_definition
 
-    runner = self.class.function_runner.new(
+    runner = Hollerith::FunctionRunner.new(
       function_definition,
       @main_context,
       @user_context,
@@ -126,3 +120,8 @@ class Hollerith
   end
 
 end
+
+require 'hollerith/function_runner'
+require 'hollerith/value_getter'
+require 'hollerith/argument_decoder'
+require 'hollerith/base_functions'

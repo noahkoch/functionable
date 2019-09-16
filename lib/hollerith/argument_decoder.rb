@@ -1,4 +1,4 @@
-class ArgumentDecoder
+class Hollerith::ArgumentDecoder
   # "result,%%_make_external_request($$_oi,true)"
   # becomes
   # ['result', '%%_make_external_request($$_oi,true)']

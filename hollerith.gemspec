@@ -6,8 +6,9 @@ Gem::Specification.new do |s|
   s.description = "Trigger code through a series of hooks and run code in loops and through conditions."
   s.authors     = ["Noah Kochanowicz"]
   s.email       = 'me@noahkoch.com'
-  s.files       = ["lib/hollerith.rb"]
-  s.homepage    =
-    'https://rubygems.org/gems/hollerith'
-  s.license       = 'MIT'
+  s.homepage    = 'https://rubygems.org/gems/hollerith'
+  s.license     = 'MIT'
+  s.files       = ["lib/hollerith.rb", "lib/hollerith/value_getter.rb", "lib/hollerith/argument_decoder.rb", "lib/hollerith/base_functions.rb", "lib/hollerith/function_runner.rb"]
+
+  s.add_dependency("deep_merge", "~> 1.2.1")
 end
