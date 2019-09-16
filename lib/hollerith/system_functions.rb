@@ -1,28 +1,34 @@
-class Hollerith::BaseFunctions  
+class Hollerith::SystemFunctions
+
+  BASE_VALID_FUNCTIONS = %w[
+    for_each
+    set
+    if
+    or
+    and
+    negate
+    count
+    make_external_request
+    custom_function
+    puts
+    concat
+    blank_array
+    array_push
+    array_value
+    eql
+    add
+    subtract
+    multiply
+    divide
+    split
+  ].freeze
 
   def valid_functions
-    %w(
-      for_each
-      set
-      if
-      or
-      and
-      negate 
-      count
-      make_external_request
-      custom_function
-      puts
-      concat
-      blank_array
-      array_push
-      array_value
-      eql
-      add
-      subtract
-      multiply
-      divide 
-      split
-    )
+    BASE_VALID_FUNCTIONS + custom_system_functions
+  end
+
+  def custom_system_functions
+    []
   end
 
   # Example usage: `%%_for_each($$_planets,%%_custom_function(get_distance_from_sun),each_planet)`

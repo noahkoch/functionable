@@ -79,7 +79,9 @@ class Hollerith
       if value_to_return
         return value_to_return
       else
-        raise ArgumentError.new("Variable not found #{value_to_return} in this context")
+        raise ArgumentError.new(
+          "Variable not found #{value_to_return} in this context"
+        )
       end
     else
       raise ArgumentError.new("Invalid variable definition #{variable}")
@@ -122,6 +124,6 @@ class Hollerith
 end
 
 require 'hollerith/function_runner'
-require 'hollerith/value_getter'
-require 'hollerith/argument_decoder'
+require 'hollerith/utilities/value_getter'
+require 'hollerith/utilities/argument_decoder'
 require 'hollerith/base_functions'

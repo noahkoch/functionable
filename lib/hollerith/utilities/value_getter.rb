@@ -15,7 +15,7 @@ class Hollerith::ValueGetter
   end
 
   def get value_to_get
-    if !value_to_get.is_a? String
+    if !value_to_get.is_a?(String)
       return value_to_get
     elsif value_to_get.downcase == 'true'
       return true
@@ -39,12 +39,14 @@ class Hollerith::ValueGetter
       @user_context_change.deep_merge!(runner.user_context_change || {}) 
 
       get(result)
-    elsif value_to_get.is_a?(String) && (value_to_get.start_with?("'") || value_to_get.start_with?('"')) && (value_to_get.end_with?("'") || value_to_get.end_with?('"'))
+    elsif value_is_in_quotes?(value_to_get)
       value_to_get[1..-2]
     else
       value_to_get
     end
   end
+
+  private
 
   def read_hash_value hash_key
     split_hash_key = hash_key.split('.')
@@ -69,11 +71,14 @@ class Hollerith::ValueGetter
         end
       end
     end
-
-    # TODO: Add dot notation handling here.
-    #       - Read all rails attributes, hash values or instance variables.
     # FIXME: Variable getting needs to be DRYed up.
 
     return hash_key_value
+  end
+
+  def value_is_in_quotes? value_to_get
+    value_to_get.is_a?(String) &&
+      (value_to_get.start_with?("'") || value_to_get.start_with?('"')) &&
+      (value_to_get.end_with?("'") || value_to_get.end_with?('"'))
   end
 end

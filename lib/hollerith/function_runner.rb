@@ -1,8 +1,8 @@
-require 'hollerith/value_getter'
-require 'hollerith/argument_decoder'
-require 'hollerith/base_functions'
+require 'hollerith/utilities/value_getter'
+require 'hollerith/utilities/argument_decoder'
+require 'hollerith/system_functions'
 
-class Hollerith::FunctionRunner < Hollerith::BaseFunctions
+class Hollerith::FunctionRunner < Hollerith::SystemFunctions
   attr_reader :user_context_change
   
   def initialize declaration, main_context, user_context, user_defined_functions
