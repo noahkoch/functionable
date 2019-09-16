@@ -1,6 +1,10 @@
 [[on_place_order]]
-  function = "for_each"
+  method = "for_each"
   loop = "$$_order_items as oi"
+  [on_place_order.before]
+    functions = [
+      "%%_puts(------------------------)"
+    ]
   [on_place_order.for_each]
     before_iteration = [
       "%%_set(all_success,true)"
@@ -11,9 +15,14 @@
       "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
     ]
     break_iteration_if = "%%_negate(%%_if($$_all_success))"
+  [on_place_order.finally]
+    functions = [
+      "%%_puts(------------------------)"
+    ]
 
 [[on_place_order]]
-  function = "for_each"
+  run_if = "%%_eql(%%_count($$_order_items),5)"
+  method = "for_each"
   loop = "$$_order_items as oi"
   [on_place_order.for_each]
     before_iteration = [
@@ -24,7 +33,13 @@
       "%%_set(result,%%_make_external_request($$_oi))",
       "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
     ]
+    next_if = "%%_or(%%_eql($$_oi,2),%%_eql($$_oi,3))" 
     break_iteration_if = "%%_negate(%%_if($$_all_success))"
+  [on_place_order.finally]
+    functions = [
+      "%%_puts(------------------------)"
+    ]
+    
 
 [custom_functions]
   [custom_functions.handle_success]

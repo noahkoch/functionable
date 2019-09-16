@@ -4,6 +4,8 @@ module BaseFunctions
     %w(
       set
       if
+      or
+      and
       negate 
       count
       make_external_request
@@ -12,6 +14,13 @@ module BaseFunctions
       concat
       blank_array
       array_push
+      array_value
+      eql
+      add
+      subtract
+      multiply
+      divide 
+      split
     )
   end
 
@@ -43,6 +52,29 @@ module BaseFunctions
         return false 
       end
     end
+  end
+
+  def __or function_array
+    function_array.each do |each_condition|
+      if get_value(each_condition)
+        return true
+      end
+    end
+
+    return false 
+  end
+
+  def __and function_array
+    all_true = false
+    function_array.each do |each_condition|
+      if !get_value(each_condition)
+        return false 
+      else 
+        all_true = true
+      end
+    end
+
+    return all_true 
   end
 
   def __negate function_array
@@ -92,9 +124,76 @@ module BaseFunctions
     return []
   end
 
+  def __array_value function_array
+    context_variable_name = get_variable(function_array.shift)
+    if @user_context[context_variable_name].is_a? Array
+      @user_context[context_variable_name][get_value(function_array.shift)]
+    elsif @base_context[context_variable_name].is_a? Array
+      @base_context[context_variable_name][get_value(function_array.shift)]
+    else
+      raise ArgumentError.new("#{context_variable_name} is not an array.")
+    end
+  end
+
   def __array_push function_array
+    context_variable_name = get_variable(function_array.shift)
+
+    if @user_context[context_variable_name].is_a? Array
+      @user_context[context_variable_name] << get_value(function_array.shift)
+    elsif @base_context[context_variable_name].is_a? Array
+      @base_context[context_variable_name] << get_value(function_array.shift)
+    else
+      raise ArgumentError.new("#{context_variable_name} is not an array.")
+    end
+  end
+
+  def __eql function_array
+    compare_value = get_value(function_array.shift)
+
+    function_array.each do |each_value_to_compare|
+      if get_value(each_value_to_compare) != compare_value 
+        return false
+      end
+    end
+
+    return true
+  end
+
+  def __add function_array
+    get_value(function_array.shift) + get_value(function_array.shift)
+  end
+
+  def __subtract function_array
+    get_value(function_array.shift) - get_value(function_array.shift)
+  end
+
+  def __multiply function_array
+    get_value(function_array.shift) * get_value(function_array.shift)
+  end
+
+  def __divide function_array
+    get_value(function_array.shift) / get_value(function_array.shift)
+  end
+
+  def __split function_array
+    get_value(function_array.shift).split(function_array.shift)
+  end
+
+  def __count function_array
+    get_value(function_array.shift).count
+  end
+
+  private
+
+  def get_array_from_variable
+  end
+
+  def get_variable variable
     # $$_successful_order_items -> successful_order_items
-    context_variable_name = function_array.shift[3..-1]
-    @user_context[context_variable_name] << get_value(function_array.shift)
+    if variable.start_with?('$$_')
+      return variable[3..-1]
+    else
+      raise ArgumentError.new('Must assign to an existing variable')
+    end
   end
 end

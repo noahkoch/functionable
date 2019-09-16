@@ -27,31 +27,39 @@ class Functionable
   end
 
   def hook_should_be_run(hook_implementation)
-    if hook_implementation.has_key?(:if) || hook_implementation.has_key?(:unless)
-      # TODO
+    if hook_implementation.has_key?('run_if')
+      evaluate_conditional(hook_implementation['run_if'])      
+    elsif hook_implementation.has_key?('run_unless')
+      !evaluate_conditional(hook_implementation['run_unless'])      
     else
       true
     end
   end
 
   def execute_hook_implementation definition
-    case definition['function']
+    if definition['before'] && definition['before']['functions']
+      evaluate_functions(definition['before']['functions'])
+    end
+
+    case definition['method']
     when 'for_each'
       before_iteration_functions = definition['for_each']['before_iteration']
       each_iteration_rules = definition['for_each']['each_iteration']
       break_when = definition['for_each']['break_iteration_if']
+      next_when = definition['for_each']['next_if']
 
-      before_iteration_functions.each do |each_function|
-        evaluate_function(each_function)
-      end
+      evaluate_functions(before_iteration_functions)
 
       get_iterator(definition['loop']) do
-        each_iteration_rules.each do |each_function|
-          evaluate_function(each_function)
-        end
-        
+        next if evaluate_conditional(next_when)
+
+        evaluate_functions(each_iteration_rules)        
         break if evaluate_conditional(break_when)
       end
+    end
+
+    if definition['finally'] && definition['finally']['functions']
+      evaluate_functions(definition['finally']['functions'])
     end
   end
 
@@ -79,11 +87,23 @@ class Functionable
     end
   end
 
+  def evaluate_functions functions
+    if functions.compact.any?
+      functions.compact.each do |function|
+        evaluate_function(function)
+      end
+    end
+  end
+
   def evaluate_conditional conditional_statement
+    return false unless conditional_statement
+
     evaluate_function(conditional_statement)
   end
 
   def evaluate_function function_definition
+    return unless function_definition
+
     runner = self.class.function_runner.new(
       function_definition,
       @context,
