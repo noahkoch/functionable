@@ -5,7 +5,7 @@ Functionable allows you to write complex code without needing to mess up your co
 
 ### Example (written in TOML)
 
-```
+```toml
 [[on_place_order]]
   # If the conditions here aren't met, we won't run this hook
   run_if = "%%_eql(%%_count($$_order_items),5)"
