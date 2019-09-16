@@ -60,7 +60,7 @@ password = "123abc"
 ### Usage
 You can write in whatever markup language you want as long as it compiles to JSON.
 
-```
+```ruby
 Functionable.new(
   json_integration,
   {
