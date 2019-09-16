@@ -20,15 +20,22 @@ or
   # - 'none': we'll just provide a list of functions to run.
   # - 'conditional': simple if/else.
   method = "for_each"
+  # All variables start with `$$_`. The `order_items` variable
+  # is set in the context (second) argument in `Hollerith.new`
   loop = "$$_order_items as oi"
   [on_place_order.for_each]
     before_iteration = [
-      # Set a local variable `all_success` to be true
+      # Set a local variable `all_success` to be true. Do not
+      # add `$$_` when setting a variable.
       "%%_set(all_success,true)"
     ]
     # On each iteration, these functions will be executed in order 
     each_iteration = [
+      # This is a function call, all functions start with `%%_`. Notice no spaces
+      # after commas. This is required. The syntax parser is quite sensitive.
       "%%_set(successful_order_items,%%_blank_array())",
+      # `$$_oi` is another example of getting a variable. This is set as part of
+      # the loop at the top of this hook.
       "%%_set(result,%%_make_external_request($$_oi))",
       # Notice the custom function here, we set that up in the bottom of the function.
       "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
