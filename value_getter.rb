@@ -25,6 +25,9 @@ class ValueGetter
       else
         @main_context[hash_key]
       end
+      # TODO: Add dot notation handling here.
+      #       - Read all rails attributes, hash values or instance variables.
+      # FIXME: Variable getting needs to be DRYed up.
     elsif value_to_get.start_with?('%%_')
       runner = FunctionRunner.new(
         value_to_get,
