@@ -2,6 +2,7 @@ module BaseFunctions
 
   def valid_functions
     %w(
+      for_each
       set
       if
       or
@@ -22,6 +23,31 @@ module BaseFunctions
       divide 
       split
     )
+  end
+
+  def __for_each function_array
+    object_to_iterate = get_value(function_array.shift)
+
+    if !object_to_iterate.respond_to?(:each)
+      raise ArgumentError.new('Not an iteratable object')
+    end
+
+    original_user_context_value = @user_context[function_array[1]]
+    object_to_iterate.each do |value|
+      # Despite going against the norm or passing user
+      # context changes to the `user_context_change` hash.
+      # Because this is an iterator, we need to modify
+      # the `user_context` directly. :'(
+      local_context = {
+        function_array[1] => value
+      }
+
+      get_value(function_array[0], local_context)
+    end
+
+    @user_context.merge!({
+      function_array[1][3..-1] => original_user_context_value
+    })
   end
 
   def __set function_array
@@ -115,9 +141,11 @@ module BaseFunctions
   end
 
   def __concat function_array
-    function_array.map do |each_element|
+    result = function_array.map do |each_element|
       get_value(each_element)
     end.join('')
+
+    result
   end
 
   def __blank_array function_array
@@ -138,10 +166,12 @@ module BaseFunctions
   def __array_push function_array
     context_variable_name = get_variable(function_array.shift)
 
+    # Only allow modifying the user_context
     if @user_context[context_variable_name].is_a? Array
-      @user_context[context_variable_name] << get_value(function_array.shift)
-    elsif @main_context[context_variable_name].is_a? Array
-      @main_context[context_variable_name] << get_value(function_array.shift)
+      @user_context_change.merge!({
+        context_variable_name => @user_context[context_variable_name] +
+          [get_value(function_array.shift)]
+      })
     else
       raise ArgumentError.new("#{context_variable_name} is not an array.")
     end
@@ -184,9 +214,6 @@ module BaseFunctions
   end
 
   private
-
-  def get_array_from_variable
-  end
 
   def get_variable variable
     # $$_successful_order_items -> successful_order_items

@@ -2,9 +2,12 @@ class ValueGetter
 
   attr_reader :user_context_change
 
-  def initialize user_context, main_context, user_defined_functions, user_context_change
+  def initialize user_context, main_context, user_defined_functions, user_context_change, local_context = {} 
+    # local_context is only used for the getting of this value
+    # and does not get bubbled up to other function calls,
+    # helpful for each loops in functions.
     @main_context = main_context  
-    @user_context = user_context  
+    @user_context = user_context.merge(local_context)
     @user_defined_functions = user_defined_functions  
     @user_context_change = user_context_change  
   end
@@ -38,7 +41,7 @@ class ValueGetter
 
       result = runner.evaluate
 
-      @user_context_change.merge!(runner.user_context_change || {}) 
+      @user_context_change.deep_merge!(runner.user_context_change || {}) 
 
       get(result)
     elsif value_to_get.is_a?(String) && (value_to_get.start_with?("'") || value_to_get.start_with?('"')) && (value_to_get.end_with?("'") || value_to_get.end_with?('"'))

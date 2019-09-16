@@ -42,12 +42,13 @@ class FunctionRunner
 
   private
 
-  def get_value value_to_get
+  def get_value value_to_get, local_context = {}
     getter = ValueGetter.new(
       @main_context,
       @user_context,
       @user_defined_functions,
-      @user_context_change
+      @user_context_change,
+      local_context
     )
 
     return_value = getter.get(value_to_get)

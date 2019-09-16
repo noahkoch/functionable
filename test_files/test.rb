@@ -1,5 +1,6 @@
 require 'toml'
 require 'pry'
+require 'deep_merge'
 load 'functionable.rb'
 
 config = TOML::Parser.new(File.read('/Users/noahkochanowicz/Stage/codeless_integrations/test_files/entry.toml')).parsed

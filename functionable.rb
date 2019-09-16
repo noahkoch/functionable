@@ -11,10 +11,10 @@ class Functionable
     FunctionRunner
   end
 
-  def initialize configuration, context
+  def initialize configuration, main_context
     @configuration = configuration 
-    @context = context
-    @user_defined_context = {}
+    @main_context = main_context
+    @user_context = {}
     @user_defined_functions = @configuration['custom_functions'] 
   end
 
@@ -68,14 +68,14 @@ class Functionable
     collection_variable, each_value_variable = iterator_definition.split(' as ')
 
     get_variable_from_context(collection_variable).each do |each_iteration|
-      @user_defined_context[each_value_variable] = each_iteration
+      @user_context[each_value_variable] = each_iteration
       yield
     end
   end
 
   def get_variable_from_context variable
     if variable.start_with?('$$_')
-      value_to_return = @context[variable[3..-1].strip]   
+      value_to_return = @main_context[variable[3..-1].strip]   
 
       if value_to_return
         return value_to_return
@@ -106,15 +106,15 @@ class Functionable
 
     runner = self.class.function_runner.new(
       function_definition,
-      @context,
-      @user_defined_context,
+      @main_context,
+      @user_context,
       @user_defined_functions
     )
 
     results = runner.evaluate
 
     if runner.user_context_change
-      @user_defined_context.merge!(runner.user_context_change)
+      @user_context.deep_merge!(runner.user_context_change)
     end
     
     return results

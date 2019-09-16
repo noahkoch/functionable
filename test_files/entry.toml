@@ -1,24 +1,24 @@
-[[on_place_order]]
-  method = "for_each"
-  loop = "$$_order_items as oi"
-  [on_place_order.before]
-    functions = [
-      "%%_puts(------------------------)"
-    ]
-  [on_place_order.for_each]
-    before_iteration = [
-      "%%_set(all_success,true)"
-    ]
-    each_iteration = [
-      "%%_set(successful_order_items,%%_blank_array())",
-      "%%_set(result,%%_make_external_request($$_oi))",
-      "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
-    ]
-    break_iteration_if = "%%_negate(%%_if($$_all_success))"
-  [on_place_order.finally]
-    functions = [
-      "%%_puts(------------------------)"
-    ]
+#[[on_place_order]]
+#  method = "for_each"
+#  loop = "$$_order_items as oi"
+#  [on_place_order.before]
+#    functions = [
+#      "%%_puts(------------------------)"
+#    ]
+#  [on_place_order.for_each]
+#    before_iteration = [
+#      "%%_set(all_success,true)"
+#    ]
+#    each_iteration = [
+#      "%%_set(successful_order_items,%%_blank_array())",
+#      "%%_set(result,%%_make_external_request($$_oi))",
+#      "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
+#    ]
+#    break_iteration_if = "%%_negate(%%_if($$_all_success))"
+#  [on_place_order.finally]
+#    functions = [
+#      "%%_puts(------------------------)"
+#    ]
 
 [[on_place_order]]
   run_if = "%%_eql(%%_count($$_order_items),5)"
@@ -37,7 +37,8 @@
     break_iteration_if = "%%_negate(%%_if($$_all_success))"
   [on_place_order.finally]
     functions = [
-      "%%_puts(------------------------)"
+      "%%_puts(------------------------)",
+      "%%_for_each($$_successful_order_items,%%_custom_function(cancel_order_item),each_order_item)"
     ]
     
 
@@ -48,6 +49,11 @@
       "order_item"
     ]
     functions = [
-      "%%_array_push($$_successful_order_items, $$_order_item)",
+      "%%_array_push($$_successful_order_items,%%_concat('this ',$$_order_item))",
       "%%_puts(%%_concat('this was our response: ',$$_result_from_success))"
+    ]
+  [custom_functions.cancel_order_item]
+    arguments = [ ]
+    functions = [
+      "%%_puts($$_each_order_item)"
     ]
