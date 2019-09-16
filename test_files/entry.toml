@@ -37,7 +37,7 @@
     break_iteration_if = "%%_negate(%%_if($$_all_success))"
   [on_place_order.finally]
     functions = [
-      "%%_puts(------------------------)",
+      "%%_puts($$_order_body.password)",
       "%%_for_each($$_successful_order_items,%%_custom_function(cancel_order_item),each_order_item)"
     ]
     
@@ -57,3 +57,7 @@
     functions = [
       "%%_puts($$_each_order_item)"
     ]
+
+[configuration]
+[configuration.order_body]
+password = "123abc"

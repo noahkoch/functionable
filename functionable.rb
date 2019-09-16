@@ -14,7 +14,7 @@ class Functionable
   def initialize configuration, main_context
     @configuration = configuration 
     @main_context = main_context
-    @user_context = {}
+    @user_context = @configuration['configuration'] || {}
     @user_defined_functions = @configuration['custom_functions'] 
   end
 

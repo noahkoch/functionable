@@ -23,14 +23,7 @@ class ValueGetter
       value_to_get.to_i
     elsif value_to_get.start_with?('$$_')
       hash_key = value_to_get[3..-1].strip
-      if @user_context.has_key?(hash_key)
-        @user_context[hash_key]
-      else
-        @main_context[hash_key]
-      end
-      # TODO: Add dot notation handling here.
-      #       - Read all rails attributes, hash values or instance variables.
-      # FIXME: Variable getting needs to be DRYed up.
+      read_hash_value(hash_key)
     elsif value_to_get.start_with?('%%_')
       runner = FunctionRunner.new(
         value_to_get,
@@ -49,5 +42,36 @@ class ValueGetter
     else
       value_to_get
     end
+  end
+
+  def read_hash_value hash_key
+    split_hash_key = hash_key.split('.')
+    base_hash_key = split_hash_key.shift
+
+    if @user_context.has_key?(base_hash_key)
+      hash_key_value = @user_context[base_hash_key]
+    else
+      hash_key_value = @main_context[base_hash_key]
+    end
+
+    split_hash_key.each do |each_hash_key|
+      if hash_key_value.is_a?(Hash) 
+        hash_key_value = hash_key_value[each_hash_key]
+      else
+        if hash_key_value.respond_to?(:attributes) && hash_key_value.attributes.include?(each_hash_key)
+          hash_key_value = hash_key_value.send(each_hash_key)
+        elsif hash_key_value.respond_to?(:instance_variables) && hash_key_value.instance_variables.map(&:to_s).include?("@#{each_hash_key}")
+          hash_key_value = hash_key_value.send(each_hash_key)
+        else
+          hash_key_value = nil
+        end
+      end
+    end
+
+    # TODO: Add dot notation handling here.
+    #       - Read all rails attributes, hash values or instance variables.
+    # FIXME: Variable getting needs to be DRYed up.
+
+    return hash_key_value
   end
 end
