@@ -128,8 +128,8 @@ module BaseFunctions
     context_variable_name = get_variable(function_array.shift)
     if @user_context[context_variable_name].is_a? Array
       @user_context[context_variable_name][get_value(function_array.shift)]
-    elsif @base_context[context_variable_name].is_a? Array
-      @base_context[context_variable_name][get_value(function_array.shift)]
+    elsif @main_context[context_variable_name].is_a? Array
+      @main_context[context_variable_name][get_value(function_array.shift)]
     else
       raise ArgumentError.new("#{context_variable_name} is not an array.")
     end
@@ -140,8 +140,8 @@ module BaseFunctions
 
     if @user_context[context_variable_name].is_a? Array
       @user_context[context_variable_name] << get_value(function_array.shift)
-    elsif @base_context[context_variable_name].is_a? Array
-      @base_context[context_variable_name] << get_value(function_array.shift)
+    elsif @main_context[context_variable_name].is_a? Array
+      @main_context[context_variable_name] << get_value(function_array.shift)
     else
       raise ArgumentError.new("#{context_variable_name} is not an array.")
     end
