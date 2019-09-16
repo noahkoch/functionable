@@ -1,6 +1,6 @@
 load 'function_runner.rb'
 
-class Functionable
+class Hollerith 
 
   HOOKS = %w(
     on_place_order

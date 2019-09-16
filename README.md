@@ -1,7 +1,7 @@
-# Functionable
+# Hollerith 
 ### Write executable code using JSON!
 
-Functionable allows you to write complex code without needing to mess up your code repo. All of your configuration can go directly in the database. Perfect for things like writing integrations with third parties.
+Hollerith allows you to write complex code without needing to mess up your code repo. All of your configuration can go directly in the database. Perfect for things like writing integrations with third parties.
 
 ### Example (written in TOML)
 
@@ -78,3 +78,8 @@ Once this has been made into a gem it will be more straightforward to add cutom 
 * Convert into Gem
 * Add a lot more documentation
 * Implement more standard ruby methods
+
+### About the name
+Hollerith punched cards were one of the many names given to the punchcards that we used in very early computers (tabulating machines). Named after Herman Hollerith, the founder of The Tabulating Machine Company (which would eventually turn into IBM through an acquisition).
+
+You can think of Hollerith as an punched card for your Ruby application.
