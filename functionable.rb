@@ -11,7 +11,7 @@ class Functionable
     FunctionRunner
   end
 
-  def initialize configuration, main_context
+  def initialize configuration, main_context = {}
     @configuration = configuration 
     @main_context = main_context
     @user_context = @configuration['configuration'] || {}
@@ -42,6 +42,11 @@ class Functionable
     end
 
     case definition['method']
+    when 'none'
+      evaluate_functions(definition['functions'])
+    when 'conditional'
+      # TODO
+      raise "Not implemented!" 
     when 'for_each'
       before_iteration_functions = definition['for_each']['before_iteration']
       each_iteration_rules = definition['for_each']['each_iteration']

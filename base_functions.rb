@@ -25,6 +25,13 @@ module BaseFunctions
     )
   end
 
+  # Example usage: `%%_for_each($$_planets,%%_custom_function(get_distance_from_sun),each_planet)`
+  # In the `get_distance_from_sun` custom function, `each_planet` will be the variable to reference.
+  # The for each loop will assign a local variable instead of passing as an argument so your function
+  # does not need to define `functions`.
+  #
+  # @param function_array [Array] Expects three arguments, 
+  # the array to iterate over, the callback function and the variable to set each element to.
   def __for_each function_array
     object_to_iterate = get_value(function_array.shift)
 
@@ -32,7 +39,6 @@ module BaseFunctions
       raise ArgumentError.new('Not an iteratable object')
     end
 
-    original_user_context_value = @user_context[function_array[1]]
     object_to_iterate.each do |value|
       # Despite going against the norm or passing user
       # context changes to the `user_context_change` hash.
@@ -44,12 +50,11 @@ module BaseFunctions
 
       get_value(function_array[0], local_context)
     end
-
-    @user_context.merge!({
-      function_array[1][3..-1] => original_user_context_value
-    })
   end
 
+  # Example: `%%_set(my_favourite_planet,'Saturn')`
+  #          Calling $$_my_favourite_planet will now return "Saturn".
+  # @param function_array [Array] Expects two arguments, the variable name and the value.
   def __set function_array
     variable_to_set = function_array.shift
 
@@ -64,6 +69,10 @@ module BaseFunctions
     return true
   end
 
+  # Example: `%%_set(my_favourite_planet,'Saturn')`
+  #          Calling $$_my_favourite_planet will now return "Saturn".
+  # @param function_array [Array] Expects one to three arguments, the condition, a callback
+  # for when the condition is true, and a callback if the condition is false.
   def __if function_array
     if get_value(function_array.shift)
       if function_array[0]
