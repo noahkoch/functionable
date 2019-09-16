@@ -87,6 +87,7 @@ Once this has been made into a gem it will be more straightforward to add cutom 
 * Set up Ruby Config to allow:
   * Adding custom functions
   * Defining Hooks
+* Create a syntax linter
 
 ### About the name
 Hollerith punched cards were one of the many names given to the punchcards that we used in very early computers. Named after Herman Hollerith, the founder of The Tabulating Machine Company. That company would eventually turn into IBM through an acquisition.
