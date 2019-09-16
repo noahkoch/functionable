@@ -3,6 +3,11 @@
 
 Hollerith allows you to write complex code without needing to mess up your code repo. All of your configuration can go directly in the database. Perfect for things like writing integrations with third parties.
 
+### Install
+`gem install hollerith`
+or
+`gem 'hollerith'` in your Gemfile
+
 ### Example (written in TOML)
 
 ```toml
@@ -61,7 +66,7 @@ password = "123abc"
 You can write in whatever markup language you want as long as it compiles to JSON.
 
 ```ruby
-Functionable.new(
+Hollerith.new(
   json_integration,
   {
     'order' => Order.last,
@@ -75,7 +80,6 @@ See the `test_files/test.rb` for a full example.
 Once this has been made into a gem it will be more straightforward to add cutom functions.
 
 ### To-Do
-* Convert into Gem
 * Add a lot more documentation
 * Implement more standard ruby methods
 
