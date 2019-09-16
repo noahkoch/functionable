@@ -5,7 +5,9 @@ Hollerith allows you to write complex code without needing to mess up your code 
 
 ### Install
 `gem install hollerith`
+
 or
+
 `gem 'hollerith'` in your Gemfile
 
 ### Example (written in TOML)
@@ -82,6 +84,9 @@ Once this has been made into a gem it will be more straightforward to add cutom 
 ### To-Do
 * Add a lot more documentation
 * Implement more standard ruby methods
+* Set up Ruby Config to allow:
+  * Adding custom functions
+  * Defining Hooks
 
 ### About the name
 Hollerith punched cards were one of the many names given to the punchcards that we used in very early computers. Named after Herman Hollerith, the founder of The Tabulating Machine Company. That company would eventually turn into IBM through an acquisition.
