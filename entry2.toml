@@ -6,7 +6,33 @@
       "%%_set(all_success,true)"
     ]
     each_iteration = [
+      "%%_set(successful_order_items,%%_blank_array())",
       "%%_set(result,%%_make_external_request($$_oi))",
-      "%%_if($$_result,%%_custom_function(handle_success,$$_result),%%_set(all_success,false))"
+      "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
     ]
     break_iteration_if = "%%_negate(%%_if($$_all_success))"
+
+[[on_place_order]]
+  function = "for_each"
+  loop = "$$_order_items as oi"
+  [on_place_order.for_each]
+    before_iteration = [
+      "%%_set(all_success,true)"
+    ]
+    each_iteration = [
+      "%%_set(successful_order_items,%%_blank_array())",
+      "%%_set(result,%%_make_external_request($$_oi))",
+      "%%_if($$_result,%%_custom_function(handle_success,$$_result,$$_oi),%%_set(all_success,false))"
+    ]
+    break_iteration_if = "%%_negate(%%_if($$_all_success))"
+
+[custom_functions]
+  [custom_functions.handle_success]
+    arguments = [
+      "result_from_success",
+      "order_item"
+    ]
+    functions = [
+      "%%_array_push($$_successful_order_items, $$_order_item)",
+      "%%_puts(%%_concat('this was our response: ',$$_result_from_success))"
+    ]

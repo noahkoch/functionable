@@ -15,6 +15,7 @@ class Functionable
     @configuration = configuration 
     @context = context
     @user_defined_context = {}
+    @user_defined_functions = @configuration['custom_functions'] 
   end
 
   def trigger_hook hook
@@ -36,7 +37,6 @@ class Functionable
   def execute_hook_implementation definition
     case definition['function']
     when 'for_each'
-      iterator = get_iterator(definition['loop'])
       before_iteration_functions = definition['for_each']['before_iteration']
       each_iteration_rules = definition['for_each']['each_iteration']
       break_when = definition['for_each']['break_iteration_if']
@@ -45,7 +45,7 @@ class Functionable
         evaluate_function(each_function)
       end
 
-      iterator do
+      get_iterator(definition['loop']) do
         each_iteration_rules.each do |each_function|
           evaluate_function(each_function)
         end
@@ -66,7 +66,7 @@ class Functionable
   end
 
   def get_variable_from_context variable
-    if variable.starts_with?('$$_')
+    if variable.start_with?('$$_')
       value_to_return = @context[variable[3..-1].strip]   
 
       if value_to_return
@@ -80,20 +80,21 @@ class Functionable
   end
 
   def evaluate_conditional conditional_statement
-    results = evaluate_function(conditional_statement)
-
-    return results[:output]
+    evaluate_function(conditional_statement)
   end
 
   def evaluate_function function_definition
-    results = self.class.function_runner.new(
+    runner = self.class.function_runner.new(
       function_definition,
       @context,
-      @user_defined_context
+      @user_defined_context,
+      @user_defined_functions
     )
 
-    if results.user_context_change
-      @user_defined_context.merge!(results.user_context_change)
+    results = runner.evaluate
+
+    if runner.user_context_change
+      @user_defined_context.merge!(runner.user_context_change)
     end
     
     return results
