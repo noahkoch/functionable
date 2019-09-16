@@ -69,3 +69,12 @@ Functionable.new(
   }
 ).trigger_hook('place_order')
 ```
+
+See the `test_files/test.rb` for a full example.
+
+Once this has been made into a gem it will be more straightforward to add cutom functions.
+
+### To-Do
+* Convert into Gem
+* Add a lot more documentation
+* Implement more standard ruby methods

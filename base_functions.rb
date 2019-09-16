@@ -40,10 +40,6 @@ module BaseFunctions
     end
 
     object_to_iterate.each do |value|
-      # Despite going against the norm or passing user
-      # context changes to the `user_context_change` hash.
-      # Because this is an iterator, we need to modify
-      # the `user_context` directly. :'(
       local_context = {
         function_array[1] => value
       }
